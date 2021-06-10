@@ -75,12 +75,24 @@ def get_last_5_entries_sales():
     the data as a list of lists
     """ 
     sales = SHEET.worksheet('sales')
-    #columns = sales.col_values()
     columns = []
     for i in range(1,7):
         columns.append(sales.col_values(i)[-5:])
-    pprint(columns)
+    return columns
+
+def calculate_stock_data(data):
+    """
+    Calculate average for each stock type and adding 10%
+    """ 
+    print("Calculating stock data... \n")
+    new_stock_data = []
     
+    for i in data:
+        int_columns = [int(x) for x in i]
+        new_stock_data.append(round(sum(int_columns)/len(i) * 1.1))
+    
+    return new_stock_data
+
 
 def main(): 
     """
@@ -91,6 +103,9 @@ def main():
     update_worksheet(sales_data, 'sales')
     new_surplus_data = calculate_surplus_data(sales_data)
     update_worksheet(new_surplus_data, 'surplus')
+    sales_columns = get_last_5_entries_sales()
+    stock_data = calculate_stock_data(sales_columns)
+    update_worksheet(stock_data, 'stock')
 
-get_last_5_entries_sales()
-#main()
+main()
+
