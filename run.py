@@ -56,7 +56,7 @@ def update_sales_worksheet(data):
     sales_worksheet.append_row(data)
     print("Sales worksheet updated successfully")
 
-def calculate_surplus_data():
+def calculate_surplus_data(sales_row):
     """
     Compare sales with stock and calculate the surplus of the day
     Negative surplus = no waste (additional sandwhiches made for customers)
@@ -64,10 +64,11 @@ def calculate_surplus_data():
     """
     print("Calculating surplus data")
     stock = SHEET.worksheet('stock').get_all_values()
-    pprint(stock)
-    stock_row = stock[0:-1]
-    print(stock_row)
+    stock_row = [int(i) for i in stock[-1]]
+    surplus_data = [(x-y) for x,y in zip(stock_row,sales_row)]
+    print(surplus_data)
 
+    return surplus_data
 
 
 
@@ -78,6 +79,7 @@ def main():
     data = get_sales_data()
     sales_data = [int(i) for i in data]
     update_sales_worksheet(sales_data)
-    calculate_surplus_data()
+    new_surplus_data = calculate_surplus_data(sales_data)
+    print(new_surplus_data)
 
 main()
